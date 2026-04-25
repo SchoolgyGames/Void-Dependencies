@@ -777,17 +777,17 @@ main{
       <div class="sp-section-label">Tab Cloak</div>
       <div class="cloak-grid">
         <div class="cloak-card" id="cloak-clever" onclick="selectCloak('clever')">
-          <img src="https://raw.githubusercontent.com/SchoolgyGames/SchoolgyDepenencies/main/clever.png" alt="Clever" onerror="this.style.display='none'">
+          <img src="https://raw.githubusercontent.com/SchoolgyGames/Void-Dependencies/main/favicons/clever.png" alt="Clever" onerror="this.style.display='none'">
           <span class="cloak-card-name">Clever</span>
           <span class="cloak-card-title">Clever | Portal</span>
         </div>
         <div class="cloak-card" id="cloak-ixl" onclick="selectCloak('ixl')">
-          <img src="https://raw.githubusercontent.com/SchoolgyGames/SchoolgyDepenencies/main/ixl.png" alt="IXL" onerror="this.style.display='none'">
+          <img src="https://raw.githubusercontent.com/SchoolgyGames/Void-Dependencies/main/favicons/ixl.png" alt="IXL" onerror="this.style.display='none'">
           <span class="cloak-card-name">IXL</span>
           <span class="cloak-card-title">IXL | Dashboard</span>
         </div>
         <div class="cloak-card" id="cloak-schoology" onclick="selectCloak('schoology')">
-          <img src="https://raw.githubusercontent.com/SchoolgyGames/SchoolgyDepenencies/main/schoology.png" alt="Schoology" onerror="this.style.display='none'">
+          <img src="https://raw.githubusercontent.com/SchoolgyGames/Void-Dependencies/main/favicons/schoology.png" alt="Schoology" onerror="this.style.display='none'">
           <span class="cloak-card-name">Schoology</span>
           <span class="cloak-card-title">Schoology | Home</span>
         </div>
@@ -934,23 +934,15 @@ main{
 const DEP_URL = "https://raw.githubusercontent.com/SchoolgyGames/SchoolgyDepenencies/main";
 
 /* ========== BACKGROUNDS ========== */
-const BG_BASES = [
-  "https://cdn.jsdelivr.net/gh/SchoolgyGames/SchoolgyDepenencies@main/",
-  "https://raw.githack.com/SchoolgyGames/SchoolgyDepenencies/main/",
-  "https://raw.githubusercontent.com/SchoolgyGames/SchoolgyDepenencies/main/"
-];
-let BG_BASE = BG_BASES[0];
+const BG_BASE = "https://raw.githubusercontent.com/SchoolgyGames/Void-Dependencies/main/bg/";
 
 const backgrounds = [
-  { id:"abstract",  name:"Abstract Topo",    icon:"🌌", file:"abstract-purple-topo.1920x1080.mp4" },
-  { id:"firewatch", name:"Firewatch Night",   icon:"🔥", file:"firewatch-purple-night.1920x1080.mp4" },
-  { id:"moon",      name:"Moon at Night",     icon:"🌙", file:"moon-at-night.1920x1080.mp4" },
-  { id:"pinkwaves", name:"Pink Waves",        icon:"🌊", file:"moving-pink-waves.3840x2160.mp4" },
-  { id:"neon",      name:"Neon Reflections",  icon:"💜", file:"neon-reflections.1920x1080.mp4" },
-  { id:"knight",    name:"Purple Knight",     icon:"⚔️", file:"purple-knight.1920x1080.mp4" },
-  { id:"samurai",   name:"Samurai City",      icon:"🏙️", file:"samurai-in-night-city.1920x1080.mp4" },
-  { id:"synthwave", name:"Synthwave Grid",    icon:"🎮", file:"synthwave-grid.1920x1080.mp4" },
-
+  { id:"firewatch", name:"Firewatch Night",  icon:"🔥", file:"firewatch-purple-night.1920x1080 (1).mp4" },
+  { id:"moon",      name:"Moon at Night",    icon:"🌙", file:"moon-at-night.3840x2160.mp4" },
+  { id:"neon",      name:"Neon Reflections", icon:"💜", file:"neon-reflections.3840x2160.mp4" },
+  { id:"knight",    name:"Purple Knight",    icon:"⚔️", file:"purple-knight.3840x2160.mp4" },
+  { id:"sky",       name:"Purple Sky",       icon:"🌌", file:"purple-sky.3840x2160.mp4" },
+  { id:"samurai",   name:"Samurai City",     icon:"🏙️", file:"samurai-in-night-city.mp4" },
 ];
 
 let selectedBg = null;
@@ -965,44 +957,21 @@ function initBackground(){
   selectedBg = rand.id;
   try{ localStorage.setItem('voidLastBg', rand.id); }catch(e){}
 
-  // Set video src with CDN fallback
   const vid = document.getElementById('bg-video');
-  let bgBaseIdx = 0;
-  function tryLoadVideo(file){
-    vid.src = BG_BASES[bgBaseIdx] + file;
-    vid.muted = true;
-    vid.loop = true;
-    vid.load();
-  }
-  vid.onerror = function(){
-    bgBaseIdx++;
-    if(bgBaseIdx < BG_BASES.length){
-      BG_BASE = BG_BASES[bgBaseIdx];
-      tryLoadVideo(rand.file);
-    }
-  };
-  tryLoadVideo(rand.file);
+  vid.src = BG_BASE + encodeURIComponent(rand.file).replace(/%20/g, ' ');
+  vid.muted = true;
+  vid.loop = true;
+  vid.load();
+  vid.play().catch(()=>{});
 
   let dismissed = false;
   function dismiss(){
     if(dismissed) return;
     dismissed = true;
     const loader = document.getElementById('void-loader');
-    loader.classList.add('fade-out');
-    setTimeout(() => { loader.style.display = 'none'; }, 950);
+    if(loader){ loader.classList.add('fade-out'); setTimeout(()=>{ loader.style.display='none'; }, 950); }
   }
-
-  // Try to play as soon as browser says it can
-  vid.addEventListener('canplaythrough', function tryPlay(){
-    vid.play().catch(()=>{});
-    dismiss();
-  }, { once: true });
-
-  vid.addEventListener('canplay', function tryPlay2(){
-    vid.play().catch(()=>{});
-  }, { once: true });
-
-  // Hard fallback dismiss after 4s
+  vid.addEventListener('canplay', dismiss, { once: true });
   setTimeout(dismiss, 4000);
 
   buildBgGrid();
@@ -1149,7 +1118,7 @@ function showTab(tab){
   }
 }
 
-const DEP_URL2 = "https://raw.githubusercontent.com/SchoolgyGames/SchoolgyDepenencies/main";
+const DEP_URL2 = "https://raw.githubusercontent.com/SchoolgyGames/Void-Dependencies/main/favicons";
 const cloaks = {
   clever:    { title:"Clever | Portal",  icon: DEP_URL2 + "/clever.png"    },
   ixl:       { title:"IXL | Dashboard",  icon: DEP_URL2 + "/ixl.png"       },
