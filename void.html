@@ -1151,8 +1151,17 @@ function applySpecificCloak(key){
   document.title = c.title;
   let fav = document.getElementById('favicon');
   if(!fav){ fav = document.createElement('link'); fav.rel='icon'; fav.id='favicon'; document.head.appendChild(fav); }
-  // Set directly — no fetch/blob roundtrip, browser picks it up immediately
-  fav.href = c.icon + '?t=' + Date.now();
+  // Fetch to blob so we can verify it loaded — fall back to embedded V if not
+  fetch(c.icon).then(r => {
+    if(!r.ok) throw new Error('404');
+    return r.blob();
+  }).then(blob => {
+    const reader = new FileReader();
+    reader.onload = () => { fav.href = reader.result; };
+    reader.readAsDataURL(blob);
+  }).catch(() => {
+    // Remote icon failed — keep the embedded void V logo, just update the title
+  });
   document.querySelectorAll('.cloak-card').forEach(el=>el.classList.remove('active'));
   const card = document.getElementById('cloak-' + key);
   if(card) card.classList.add('active');
