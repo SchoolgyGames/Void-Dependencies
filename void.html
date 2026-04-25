@@ -1128,7 +1128,7 @@ const cloaks = {
 let selectedCloak = null;
 
 const cloakKeys = Object.keys(cloaks);
-applySpecificCloak(cloakKeys[Math.floor(Math.random() * cloakKeys.length)]);
+setTimeout(() => applySpecificCloak(cloakKeys[Math.floor(Math.random() * cloakKeys.length)]), 1500);
 
 function selectCloak(key){
   selectedCloak = key;
